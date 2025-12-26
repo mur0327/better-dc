@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "BetterDC",
+  "version": "1.0",
+  "action": {
+    "default_icon": {
+      "16": "images/icon-16.png",
+      "128": "images/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon-16.png",
+    "128": "images/icon-128.png"
+  },
+  "host_permissions": ["https://gall.dcinside.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://gall.dcinside.com/mgallery/board/view/*", "https://gall.dcinside.com/board/view/*"],
+      "css": ["styles/style.css"],
+      "js": ["scripts/main.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "scripts/logger.js",
+        "scripts/filter.js",
+        "scripts/post-navigation.js",
+        "scripts/comment.js",
+        "scripts/volume.js"
+      ],
+      "matches": ["https://gall.dcinside.com/*"]
+    }
+  ]
+}
