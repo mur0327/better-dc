@@ -1,6 +1,21 @@
-export async function main(log) {
+/**
+ * @fileoverview 댓글 영역 UI 개선 모듈
+ * 댓글 새로고침 버튼의 위치를 조정하여 사용성을 개선합니다.
+ */
+
+/**
+ * 댓글 모듈을 초기화합니다.
+ * @param {Function} log - 로깅 함수
+ * @returns {Promise<void>}
+ */
+export async function initComment(log) {
   "use strict";
 
+  /**
+   * 댓글 영역의 레이아웃을 재배치합니다.
+   * 새로고침 버튼을 댓글 수 위로 이동시킵니다.
+   * @returns {void}
+   */
   function moveCommentBox() {
     const commentCountDiv = document.querySelector("div.comment_count");
     const numBoxDiv = commentCountDiv ? commentCountDiv.querySelector("div.fl.num_box") : null;
@@ -9,15 +24,12 @@ export async function main(log) {
     if (commentCountDiv && numBoxDiv && frDiv) {
       commentCountDiv.style.height = "82px";
 
-      // frDiv를 numBoxDiv 바로 위로 이동
       numBoxDiv.before(frDiv);
 
-      // 스타일 조정: float 제거 및 블록화
       frDiv.style.float = "none";
       frDiv.style.display = "block";
-      frDiv.style.textAlign = "left"; // 왼쪽 정렬
+      frDiv.style.textAlign = "left";
 
-      // numBoxDiv도 float 제거 및 블록화
       numBoxDiv.style.float = "none";
       numBoxDiv.style.display = "block";
 
