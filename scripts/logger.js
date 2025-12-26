@@ -25,11 +25,9 @@ export function log(func, status, message = "") {
   const styles = loggerConfig?.styles || {};
   const extensionName = loggerConfig?.extensionName || "BetterDC";
 
-  const styleMap = {
-    success: styles.success,
-    fail: styles.fail,
-  };
-  const selectedStyles = styleMap[status] || styles.info || ["", "", "", ""];
+  // fallback은 warn 스타일 사용
+  const normalizedStatus = status === "fallback" ? "warn" : status;
+  const selectedStyles = styles[normalizedStatus] || styles.info || ["", "", "", ""];
 
   const funcName = typeof func === "function" ? func.name : func;
 

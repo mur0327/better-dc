@@ -2,6 +2,7 @@
   "manifest_version": 3,
   "name": "BetterDC",
   "version": "1.0",
+  "description": "디시인사이드 경험을 개선하는 확장 프로그램",
   "icons": {
     "16": "images/icon16.png",
     "128": "images/icon128.png"

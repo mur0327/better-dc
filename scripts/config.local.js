@@ -6,8 +6,8 @@
 export const CONFIG = {
   // 갤러리 기본 URL
   baseURL: {
-    minor: "https://gall.dcinside.com/mgallery/board", // 마이너 갤러리
-    regular: "https://gall.dcinside.com/board", // 정식 갤러리
+    minor: "https://gall.dcinside.com/mgallery/board",
+    regular: "https://gall.dcinside.com/board",
   },
 
   // 동영상 기본 볼륨 (0.0 ~ 1.0)
@@ -22,6 +22,9 @@ export const CONFIG = {
 
   // 댓글 영역 설정
   comment: {
+    containerSelector: "div.comment_count",
+    numBoxSelector: "div.fl.num_box",
+    refreshSelector: "div.fr",
     containerHeight: "82px",
   },
 
@@ -39,6 +42,12 @@ export const CONFIG = {
         "background: #3c498c; padding: 2px 4px; border-radius: 4px 0px 0px 4px; color: white;",
         "background: #192226; padding: 2px 4px; color: white;",
         "background: #427d53; padding: 2px 4px; border-radius: 0px 4px 4px 0px; color: white;",
+        "",
+      ],
+      warn: [
+        "background: #3c498c; padding: 2px 4px; border-radius: 4px 0px 0px 4px; color: white;",
+        "background: #192226; padding: 2px 4px; color: white;",
+        "background: #d4a72c; padding: 2px 4px; border-radius: 0px 4px 4px 0px; color: white;",
         "",
       ],
       fail: [

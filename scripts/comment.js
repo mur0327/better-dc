@@ -12,7 +12,7 @@
 export async function initComment(log, config) {
   "use strict";
 
-  const { containerHeight } = config.comment;
+  const { containerSelector, numBoxSelector, refreshSelector, containerHeight } = config.comment;
 
   /**
    * 댓글 영역의 레이아웃을 재배치합니다.
@@ -20,9 +20,9 @@ export async function initComment(log, config) {
    * @returns {void}
    */
   function moveCommentBox() {
-    const commentCountDiv = document.querySelector("div.comment_count");
-    const numBoxDiv = commentCountDiv ? commentCountDiv.querySelector("div.fl.num_box") : null;
-    const frDiv = commentCountDiv ? commentCountDiv.querySelector("div.fr") : null;
+    const commentCountDiv = document.querySelector(containerSelector);
+    const numBoxDiv = commentCountDiv ? commentCountDiv.querySelector(numBoxSelector) : null;
+    const frDiv = commentCountDiv ? commentCountDiv.querySelector(refreshSelector) : null;
 
     if (commentCountDiv && numBoxDiv && frDiv) {
       commentCountDiv.style.height = containerHeight;
