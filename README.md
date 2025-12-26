@@ -51,7 +51,7 @@ BetterDCFinal/
 ## 🔧 지원 페이지
 
 - `https://gall.dcinside.com/mgallery/board/view/*` (마이너 갤러리)
-- `https://gall.dcinside.com/board/view/*` (일반 갤러리)
+- `https://gall.dcinside.com/board/view/*` (정식 갤러리)
 
 ## 📝 사용법
 

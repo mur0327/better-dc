@@ -12,6 +12,8 @@
 export async function initNavigation(log, config) {
   "use strict";
 
+  const { postListSelector, buttonContainerSelectors } = config.navigation;
+
   // 현재 URL을 기반으로 갤러리 타입 판별
   const isMinorGallery = window.location.pathname.includes("/mgallery/");
   const baseURL = isMinorGallery ? config.baseURL.minor : config.baseURL.regular;
@@ -46,7 +48,7 @@ export async function initNavigation(log, config) {
       const html = await response.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
-      const postElements = doc.querySelectorAll('.ub-content.us-post[data-type^="icon_recom"]');
+      const postElements = doc.querySelectorAll(postListSelector);
       const postNumbers = Array.from(postElements).map((post) => post.getAttribute("data-no"));
 
       sessionStorage.setItem(cacheKey, JSON.stringify(postNumbers));
@@ -90,11 +92,10 @@ export async function initNavigation(log, config) {
       return a;
     }
 
-    const viewBottomBtnbox = document.querySelector(".view_bottom_btnbox > .fl");
-    const listBottomBtnbox = document.querySelector(".list_bottom_btnbox > .fl");
-
-    if (viewBottomBtnbox) viewBottomBtnbox.appendChild(createButton());
-    if (listBottomBtnbox) listBottomBtnbox.appendChild(createButton());
+    buttonContainerSelectors.forEach((selector) => {
+      const container = document.querySelector(selector);
+      if (container) container.appendChild(createButton());
+    });
 
     log(createNavButton, "success", `type: ${type}`);
   }

@@ -69,7 +69,7 @@ export async function initFilter(log, config) {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1 && node.matches(`${containerSelector} ${imageSelector}`)) {
+          if (node.nodeType === 1 && node.matches(imageSelector)) {
             if (!existingImages.has(node)) {
               existingImages.add(node);
               node.classList.add("filter_removed");

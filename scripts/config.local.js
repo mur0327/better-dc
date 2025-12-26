@@ -4,6 +4,9 @@
  */
 
 export const CONFIG = {
+  // 사이트 도메인
+  domain: ".dcinside.com",
+
   // 갤러리 기본 URL
   baseURL: {
     minor: "https://gall.dcinside.com/mgallery/board",
@@ -15,9 +18,15 @@ export const CONFIG = {
 
   // 필터 설정
   filter: {
-    containerSelector: ".write_div",
+    containerSelector: "div.view_content_wrap .writing_view_box .write_div",
     imageSelector: 'img:not([alt="매니저 차단 이미지"]):not(.written_dccon)',
     videoSelector: "video",
+  },
+
+  // 네비게이션 설정
+  navigation: {
+    postListSelector: '.ub-content.us-post[data-type^="icon_recom"]',
+    buttonContainerSelectors: [".view_bottom_btnbox > .fl", ".list_bottom_btnbox > .fl"],
   },
 
   // 댓글 영역 설정

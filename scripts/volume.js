@@ -12,14 +12,14 @@
 export async function initVolume(log, config) {
   "use strict";
 
-  const { defaultVolume } = config;
+  const { defaultVolume, domain } = config;
 
   /**
    * 동영상 볼륨 쿠키를 설정합니다.
    * @returns {void}
    */
   function setVolumeCookie() {
-    document.cookie = `video_v=${defaultVolume}; domain=.dcinside.com; path=/`;
+    document.cookie = `video_v=${defaultVolume}; domain=${domain}; path=/`;
   }
 
   setVolumeCookie();

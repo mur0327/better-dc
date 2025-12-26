@@ -1,7 +1,8 @@
-div.view_content_wrap .writing_view_box .write_div img:not(.written_dccon):not([alt="매니저 차단 이미지"]):not(.filter_removed),
+div.view_content_wrap
+  .writing_view_box
+  .write_div
+  img:not(.written_dccon):not([alt="매니저 차단 이미지"]):not(.filter_removed),
 div.view_content_wrap .writing_view_box .write_div video:not(.written_dccon):not(.filter_removed) {
-  /* filter: blur(20px) grayscale(50%) opacity(0.2); */
-  /* filter: blur(20px) grayscale(50%) saturate(0.5) opacity(0.5); */
   filter: blur(20px) grayscale(50%) saturate(0.7) opacity(0.5);
   clip-path: inset(0 0 0 0);
 }
