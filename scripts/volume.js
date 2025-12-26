@@ -6,21 +6,22 @@
 /**
  * 볼륨 모듈을 초기화합니다.
  * @param {Function} log - 로깅 함수
+ * @param {object} config - 설정 객체
  * @returns {Promise<void>}
  */
-export async function initVolume(log) {
+export async function initVolume(log, config) {
   "use strict";
 
-  const DESIRED_VOLUME = 0.1;
+  const { defaultVolume } = config;
 
   /**
    * 동영상 볼륨 쿠키를 설정합니다.
    * @returns {void}
    */
   function setVolumeCookie() {
-    document.cookie = `video_v=${DESIRED_VOLUME}; domain=.dcinside.com; path=/`;
+    document.cookie = `video_v=${defaultVolume}; domain=.dcinside.com; path=/`;
   }
 
   setVolumeCookie();
-  log(setVolumeCookie, "success", `set cookie video_v=${DESIRED_VOLUME}`);
+  log(setVolumeCookie, "success", `set cookie video_v=${defaultVolume}`);
 }

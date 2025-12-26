@@ -6,10 +6,13 @@
 /**
  * 댓글 모듈을 초기화합니다.
  * @param {Function} log - 로깅 함수
+ * @param {object} config - 설정 객체
  * @returns {Promise<void>}
  */
-export async function initComment(log) {
+export async function initComment(log, config) {
   "use strict";
+
+  const { containerHeight } = config.comment;
 
   /**
    * 댓글 영역의 레이아웃을 재배치합니다.
@@ -22,7 +25,7 @@ export async function initComment(log) {
     const frDiv = commentCountDiv ? commentCountDiv.querySelector("div.fr") : null;
 
     if (commentCountDiv && numBoxDiv && frDiv) {
-      commentCountDiv.style.height = "82px";
+      commentCountDiv.style.height = containerHeight;
 
       numBoxDiv.before(frDiv);
 

@@ -6,10 +6,13 @@
 /**
  * 필터 모듈을 초기화합니다.
  * @param {Function} log - 로깅 함수
+ * @param {object} config - 설정 객체
  * @returns {Promise<void>}
  */
-export async function initFilter(log) {
+export async function initFilter(log, config) {
   "use strict";
+
+  const { containerSelector, imageSelector, videoSelector } = config.filter;
 
   /**
    * 우클릭 시 모든 대상 요소의 필터를 해제합니다.
@@ -34,13 +37,11 @@ export async function initFilter(log) {
 
   /**
    * 지정된 선택자 내의 모든 미디어 요소에 필터 리스너를 추가합니다.
-   * @param {string} selector - 컨테이너 선택자
-   * @param {{image: string, video: string}} tags - 미디어 태그 선택자
    * @returns {void}
    */
-  function addFilterListeners(selector, tags) {
-    const images = document.querySelectorAll(`${selector} ${tags.image}`);
-    const videos = document.querySelectorAll(`${selector} ${tags.video}`);
+  function addFilterListeners() {
+    const images = document.querySelectorAll(`${containerSelector} ${imageSelector}`);
+    const videos = document.querySelectorAll(`${containerSelector} ${videoSelector}`);
     const allMedia = [...images, ...videos];
 
     if (allMedia.length > 0) {
@@ -53,16 +54,14 @@ export async function initFilter(log) {
 
   /**
    * DOM 변경을 감지하여 동적으로 추가되는 미디어에도 필터를 적용합니다.
-   * @param {string} selector - 관찰할 컨테이너 선택자
-   * @param {{image: string, video: string}} tags - 미디어 태그 선택자
    * @param {Function} callback - 새 미디어 감지 시 실행할 콜백
    * @returns {void}
    */
-  function observeElement(selector, tags, callback) {
-    addFilterListeners(selector, tags);
+  function observeElement(callback) {
+    addFilterListeners();
 
     const existingImages = new WeakSet();
-    const images = document.querySelectorAll(`${selector} ${tags.image}`);
+    const images = document.querySelectorAll(`${containerSelector} ${imageSelector}`);
     images.forEach((image) => {
       existingImages.add(image);
     });
@@ -70,7 +69,7 @@ export async function initFilter(log) {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1 && node.matches(`${selector} ${tags.image}`)) {
+          if (node.nodeType === 1 && node.matches(`${containerSelector} ${imageSelector}`)) {
             if (!existingImages.has(node)) {
               existingImages.add(node);
               node.classList.add("filter_removed");
@@ -82,7 +81,7 @@ export async function initFilter(log) {
       });
     });
 
-    const targetNode = document.querySelector(selector);
+    const targetNode = document.querySelector(containerSelector);
     if (targetNode) {
       observer.observe(targetNode, {
         childList: true,
@@ -96,15 +95,9 @@ export async function initFilter(log) {
    * @returns {void}
    */
   function initializeFilter() {
-    const selector = ".write_div";
-    const tags = {
-      image: 'img:not([alt="매니저 차단 이미지"]):not(.written_dccon)',
-      video: "video",
-    };
-
-    observeElement(selector, tags, () => {
+    observeElement(() => {
       log(observeElement, "success");
-      addFilterListeners(selector, tags);
+      addFilterListeners();
     });
 
     log(initializeFilter, "success");

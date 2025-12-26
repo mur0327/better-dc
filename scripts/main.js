@@ -3,9 +3,13 @@
  * 모든 기능 모듈을 로드하고 순차적으로 실행합니다.
  */
 (async () => {
-  const srcLogger = chrome.runtime.getURL("scripts/logger.js");
-  const { log } = await import(srcLogger);
+  const srcConfig = chrome.runtime.getURL("scripts/config.local.js");
+  const { CONFIG } = await import(srcConfig);
 
+  const srcLogger = chrome.runtime.getURL("scripts/logger.js");
+  const { log, initLogger } = await import(srcLogger);
+
+  initLogger(CONFIG);
   log("main", "info", "starting execution...");
 
   const modules = [
@@ -24,16 +28,17 @@
       for (const { name, fn } of modules) {
         const src = chrome.runtime.getURL(`scripts/${name}.js`);
         const module = await import(src);
-        await module[fn](log);
+        await module[fn](log, CONFIG);
       }
     } catch (error) {
       log("main", "fail", error);
     }
   }
 
+  // DOM이 이미 로드되었거나 로드 후 실행
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", runScripts);
+    document.addEventListener("DOMContentLoaded", () => runScripts());
   } else {
-    runScripts();
+    await runScripts();
   }
 })();

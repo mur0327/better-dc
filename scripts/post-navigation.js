@@ -6,16 +6,22 @@
 /**
  * 네비게이션 모듈을 초기화합니다.
  * @param {Function} log - 로깅 함수
+ * @param {object} config - 설정 객체
  * @returns {Promise<void>}
  */
-export async function initNavigation(log) {
+export async function initNavigation(log, config) {
   "use strict";
+
+  // 현재 URL을 기반으로 갤러리 타입 판별
+  const isMinorGallery = window.location.pathname.includes("/mgallery/");
+  const baseURL = isMinorGallery ? config.baseURL.minor : config.baseURL.regular;
+
+  log(initNavigation, "info", `galleryType: ${isMinorGallery ? "minor" : "regular"}`);
 
   const params = new URLSearchParams(window.location.search);
   const galleryId = params.get("id");
   const currentPostNo = params.get("no");
   const currentPage = parseInt(params.get("page")) || 1;
-  const baseURL = "https://gall.dcinside.com/mgallery/board";
 
   const isRecommendPage = params.get("exception_mode") === "recommend";
   const modeParam = isRecommendPage ? "&exception_mode=recommend" : "";

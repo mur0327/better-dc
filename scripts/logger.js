@@ -3,34 +3,15 @@
  * 색상이 적용된 그룹화된 콘솔 로그를 제공합니다.
  */
 
-const logInfoStyles = [
-  "background: #3c498c; padding: 2px 4px; border-radius: 4px 0px 0px 4px; color: white;",
-  "background: #192226; padding: 2px 4px; color: white;",
-  "background: #0B73F5; padding: 2px 4px; border-radius: 0px 4px 4px 0px; color: white;",
-  "",
-];
+let loggerConfig = null;
 
-const logSuccessStyles = [
-  "background: #3c498c; padding: 2px 4px; border-radius: 4px 0px 0px 4px; color: white;",
-  "background: #192226; padding: 2px 4px; color: white;",
-  "background: #427d53; padding: 2px 4px; border-radius: 0px 4px 4px 0px; color: white;",
-  "",
-];
-
-const logFailStyles = [
-  "background: #3c498c; padding: 2px 4px; border-radius: 4px 0px 0px 4px; color: white;",
-  "background: #192226; padding: 2px 4px; color: white;",
-  "background: #da6e65; padding: 2px 4px; border-radius: 0px 4px 4px 0px; color: white;",
-  "",
-];
-
-let extensionName = "BetterDC";
-try {
-  if (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getManifest) {
-    extensionName = chrome.runtime.getManifest().name;
-  }
-} catch (e) {
-  // chrome.runtime API를 사용할 수 없는 환경에서는 기본값 사용
+/**
+ * 설정을 초기화합니다.
+ * @param {object} config - CONFIG 객체
+ * @returns {void}
+ */
+export function initLogger(config) {
+  loggerConfig = config.logger;
 }
 
 /**
@@ -41,10 +22,18 @@ try {
  * @returns {void}
  */
 export function log(func, status, message = "") {
-  const styles = status === "success" ? logSuccessStyles : status === "fail" ? logFailStyles : logInfoStyles;
+  const styles = loggerConfig?.styles || {};
+  const extensionName = loggerConfig?.extensionName || "BetterDC";
+
+  const styleMap = {
+    success: styles.success,
+    fail: styles.fail,
+  };
+  const selectedStyles = styleMap[status] || styles.info || ["", "", "", ""];
+
   const funcName = typeof func === "function" ? func.name : func;
 
-  console.groupCollapsed(`%c ${extensionName} %c ${funcName} %c ${status} %c`, ...styles, message);
+  console.groupCollapsed(`%c ${extensionName} %c ${funcName} %c ${status} %c`, ...selectedStyles, message);
 
   if (typeof message === "object") {
     console.log("Details:", message);

@@ -18,6 +18,7 @@
   "web_accessible_resources": [
     {
       "resources": [
+        "scripts/config.local.js",
         "scripts/logger.js",
         "scripts/filter.js",
         "scripts/post-navigation.js",
