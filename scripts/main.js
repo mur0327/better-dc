@@ -12,11 +12,23 @@
   initLogger(CONFIG);
   log("main", "info", "starting execution...");
 
+  // 사용자 설정 로드
+  const userSettings = await new Promise((resolve) => {
+    chrome.storage.sync.get({ filterEnabled: true, volume: 10 }, resolve);
+  });
+
+  log("main", "info", `userSettings: filterEnabled=${userSettings.filterEnabled}, volume=${userSettings.volume}`);
+
+  // 필터 비활성화 시 body에 클래스 추가하여 CSS 블러 효과 제거
+  if (!userSettings.filterEnabled) {
+    document.documentElement.classList.add("betterdc-filter-disabled");
+  }
+
   const modules = [
-    { name: "filter", fn: "initFilter" },
-    { name: "post-navigation", fn: "initNavigation" },
-    { name: "comment", fn: "initComment" },
-    { name: "volume", fn: "initVolume" },
+    { name: "filter", fn: "initFilter", enabled: userSettings.filterEnabled },
+    { name: "post-navigation", fn: "initNavigation", enabled: true },
+    { name: "comment", fn: "initComment", enabled: true },
+    { name: "volume", fn: "initVolume", enabled: true },
   ];
 
   /**
@@ -25,10 +37,14 @@
    */
   async function runScripts() {
     try {
-      for (const { name, fn } of modules) {
+      for (const { name, fn, enabled } of modules) {
+        if (!enabled) {
+          log("main", "info", `${name} disabled, skipping...`);
+          continue;
+        }
         const src = chrome.runtime.getURL(`scripts/${name}.js`);
         const module = await import(src);
-        await module[fn](log, CONFIG);
+        await module[fn](log, CONFIG, userSettings);
       }
     } catch (error) {
       log("main", "fail", error);

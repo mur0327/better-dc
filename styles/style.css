@@ -1,3 +1,11 @@
+/* 필터 비활성화 시 블러 효과 제거 */
+html.betterdc-filter-disabled div.view_content_wrap .writing_view_box .write_div img,
+html.betterdc-filter-disabled div.view_content_wrap .writing_view_box .write_div video {
+  filter: none !important;
+  clip-path: none !important;
+}
+
+/* 필터 활성화 시 블러 효과 */
 div.view_content_wrap
   .writing_view_box
   .write_div

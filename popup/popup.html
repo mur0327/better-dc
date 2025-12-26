@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BetterDC 설정</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="popup-container">
+      <h1 class="popup-title">BetterDC</h1>
+
+      <div class="setting-group">
+        <label class="setting-label">
+          <span class="setting-name">이미지 필터</span>
+          <span class="setting-desc">이미지/영상 블러 처리</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="filterEnabled" checked />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label">
+          <span class="setting-name">동영상 볼륨</span>
+          <span class="setting-desc">기본 볼륨 설정</span>
+        </label>
+        <div class="volume-control">
+          <input type="range" id="volumeSlider" min="0" max="100" value="10" />
+          <span id="volumeValue" class="volume-value">10%</span>
+        </div>
+      </div>
+
+      <div class="popup-footer">
+        <span class="save-status" id="saveStatus"></span>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

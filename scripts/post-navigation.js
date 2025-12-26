@@ -7,9 +7,10 @@
  * 네비게이션 모듈을 초기화합니다.
  * @param {Function} log - 로깅 함수
  * @param {object} config - 설정 객체
+ * @param {object} userSettings - 사용자 설정 (미사용, 호환성 유지)
  * @returns {Promise<void>}
  */
-export async function initNavigation(log, config) {
+export async function initNavigation(log, config, userSettings) {
   "use strict";
 
   const { postListSelector, buttonContainerSelectors } = config.navigation;
