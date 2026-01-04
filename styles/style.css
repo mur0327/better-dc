@@ -15,28 +15,34 @@ div.view_content_wrap .writing_view_box .write_div video:not(.written_dccon):not
   clip-path: inset(0 0 0 0);
 }
 
+/* 이전글, 다음글 버튼 */
 .btnPrev,
 .btnNext {
   display: inline-block;
-  width: 82px;
-  height: 35px;
-  padding-right: 2px;
-  margin-left: 5px;
-  box-sizing: border-box;
-  border-width: 1px 1px 3px 1px;
-  border-style: solid;
-  border-radius: 2px;
-  background: #3b4890;
-  border-color: #29367c;
-  text-shadow: 0px -1px #1d2761;
-  color: #fff;
+  padding: 10px 15px;
+  background-color: #3b4890;
+  color: white;
+  border: none;
+  border-radius: 5px;
   font-size: 14px;
-  font-weight: bold;
-  line-height: 31px;
   text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .btnPrev:hover,
 .btnNext:hover {
+  background-color: #5a6abf;
   text-decoration: none;
+}
+
+/* 고정 네비게이션 버튼 컨테이너 */
+#betterdc-nav-container {
+  position: fixed;
+  bottom: 530px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 9999;
 }

@@ -70,6 +70,40 @@ export async function initNavigation(log, config, userSettings) {
   }
 
   /**
+   * 버튼 컨테이너의 위치를 본문 기준으로 업데이트합니다.
+   * @param {HTMLElement} navContainer - 네비게이션 컨테이너
+   */
+  function updateNavPosition(navContainer) {
+    const mainContainer = document.querySelector("main#container");
+    if (!mainContainer) return;
+
+    const rect = mainContainer.getBoundingClientRect();
+    const buttonWidth = 100; // 버튼 너비 + 여백
+    navContainer.style.left = `${rect.left - buttonWidth}px`;
+  }
+
+  /**
+   * 고정 네비게이션 컨테이너를 생성하거나 기존 컨테이너를 반환합니다.
+   * @returns {HTMLElement} 네비게이션 컨테이너 요소
+   */
+  function createFixedNavContainer() {
+    let container = document.getElementById("betterdc-nav-container");
+    if (container) return container;
+
+    container = document.createElement("div");
+    container.id = "betterdc-nav-container";
+    document.body.appendChild(container);
+
+    // 초기 위치 설정
+    updateNavPosition(container);
+
+    // 창 크기 변경 시 위치 재계산
+    window.addEventListener("resize", () => updateNavPosition(container));
+
+    return container;
+  }
+
+  /**
    * 이전글 또는 다음글 네비게이션 버튼을 생성하고 DOM에 추가합니다.
    * @param {"prev"|"next"} type - 버튼 타입
    * @param {string} postNo - 이동할 게시글 번호
@@ -93,10 +127,22 @@ export async function initNavigation(log, config, userSettings) {
       return a;
     }
 
-    buttonContainerSelectors.forEach((selector) => {
-      const container = document.querySelector(selector);
-      if (container) container.appendChild(createButton());
-    });
+    // 기존 로직: 본문 하단/댓글 하단에 버튼 추가
+    // buttonContainerSelectors.forEach((selector) => {
+    //   const container = document.querySelector(selector);
+    //   if (container) container.appendChild(createButton());
+    // });
+
+    // 새 로직: 고정 위치 컨테이너에 버튼 추가
+    const container = createFixedNavContainer();
+    const button = createButton();
+
+    // 다음글은 위에, 이전글은 아래에 배치
+    if (type === "next") {
+      container.prepend(button);
+    } else {
+      container.appendChild(button);
+    }
 
     log(createNavButton, "success", `type: ${type}`);
   }

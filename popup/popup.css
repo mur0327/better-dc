@@ -108,6 +108,7 @@ body {
 
 input[type="range"] {
   -webkit-appearance: none;
+  appearance: none;
   width: 100px;
   height: 6px;
   background: linear-gradient(to right, #3b4890 0%, #3b4890 10%, #d1d5db 10%, #d1d5db 100%);
