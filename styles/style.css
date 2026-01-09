@@ -15,9 +15,10 @@ div.view_content_wrap .writing_view_box .write_div video:not(.written_dccon):not
   clip-path: inset(0 0 0 0);
 }
 
-/* 이전글, 다음글 버튼 */
+/* 이전글, 다음글, 댓글 바로보기 버튼 */
 .btnPrev,
-.btnNext {
+.btnNext,
+.btnComment {
   display: inline-block;
   padding: 10px 15px;
   background-color: #3b4890;
@@ -32,7 +33,8 @@ div.view_content_wrap .writing_view_box .write_div video:not(.written_dccon):not
 }
 
 .btnPrev:hover,
-.btnNext:hover {
+.btnNext:hover,
+.btnComment:hover {
   background-color: #5a6abf;
   text-decoration: none;
 }

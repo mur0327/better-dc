@@ -148,6 +148,31 @@ export async function initNavigation(log, config, userSettings) {
   }
 
   /**
+   * 댓글 바로보기 버튼을 생성하고 DOM에 추가합니다.
+   * @returns {void}
+   */
+  function createCommentButton() {
+    const commentSection = document.getElementById("focus_cmt");
+    if (!commentSection) {
+      log(createCommentButton, "warn", "comment section not found");
+      return;
+    }
+
+    const container = createFixedNavContainer();
+
+    const button = document.createElement("button");
+    button.innerHTML = "댓글";
+    button.className = "btnComment";
+    button.addEventListener("click", () => {
+      const rect = commentSection.getBoundingClientRect();
+      window.scrollTo(window.scrollX, window.scrollY + rect.top);
+    });
+
+    container.appendChild(button);
+    log(createCommentButton, "success", "comment button added");
+  }
+
+  /**
    * 이전글/다음글 버튼을 분석하고 추가합니다.
    * @returns {Promise<void>}
    */
@@ -184,4 +209,9 @@ export async function initNavigation(log, config, userSettings) {
   }
 
   await addNavButtons();
+
+  // 게시글 페이지에서 댓글 바로보기 버튼 추가
+  if (window.location.pathname.includes("/view")) {
+    createCommentButton();
+  }
 }
