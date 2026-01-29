@@ -14,95 +14,45 @@ export async function initFilter(log, config, userSettings) {
   "use strict";
 
   const { containerSelector, imageSelector, videoSelector } = config.filter;
+  const combinedSelector = `${containerSelector} ${imageSelector}, ${containerSelector} ${videoSelector}`;
 
-  /**
-   * 우클릭 시 모든 대상 요소의 필터를 해제합니다.
-   * @param {HTMLElement} element - 이벤트를 바인딩할 요소
-   * @param {HTMLElement[]} targets - 필터를 해제할 대상 요소 배열
-   * @returns {void}
-   */
-  function addContextMenuListener(element, targets) {
-    element.addEventListener(
-      "contextmenu",
-      (event) => {
-        event.preventDefault();
-        event.stopPropagation();
+  const controller = new AbortController();
 
-        targets.forEach((target) => {
-          target.classList.add("filter_removed");
-        });
-      },
-      { once: true }
-    );
-  }
+  document.addEventListener(
+    "contextmenu",
+    (event) => {
+      // 1. 정상적인 경우: 요소가 DOM에 붙어있어 부모 탐색 가능
+      const isConnectedMatch = event.target.closest(combinedSelector);
 
-  /**
-   * 지정된 선택자 내의 모든 미디어 요소에 필터 리스너를 추가합니다.
-   * @returns {void}
-   */
-  function addFilterListeners() {
-    const images = document.querySelectorAll(`${containerSelector} ${imageSelector}`);
-    const videos = document.querySelectorAll(`${containerSelector} ${videoSelector}`);
-    const allMedia = [...images, ...videos];
+      // 2. 예외 처리: 우클릭 직전 요소가 교체되어(video -> img) detached 상태인 경우
+      // 부모 탐색(closest)은 실패하므로, 요소 자체의 셀렉터 매칭만 확인하여 처리 허용
+      const isDetachedMatch = event.target.matches?.(imageSelector) || event.target.matches?.(videoSelector);
 
-    if (allMedia.length > 0) {
-      allMedia.forEach((media) => {
-        addContextMenuListener(media, allMedia);
+      if (!isConnectedMatch && !isDetachedMatch) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      document.querySelectorAll(combinedSelector).forEach((el) => {
+        el.classList.add("filter_removed");
       });
-      log(addFilterListeners, "success", `count: ${allMedia.length}`);
-    }
-  }
 
-  /**
-   * DOM 변경을 감지하여 동적으로 추가되는 미디어에도 필터를 적용합니다.
-   * @param {Function} callback - 새 미디어 감지 시 실행할 콜백
-   * @returns {void}
-   */
-  function observeElement(callback) {
-    addFilterListeners();
+      controller.abort(); // 리스너 제거
+      log(initFilter, "success", "filter removed by contextmenu");
 
-    const existingImages = new WeakSet();
-    const images = document.querySelectorAll(`${containerSelector} ${imageSelector}`);
-    images.forEach((image) => {
-      existingImages.add(image);
-    });
-
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1 && node.matches(imageSelector)) {
-            if (!existingImages.has(node)) {
-              existingImages.add(node);
+      // 이후 추가되는 이미지/비디오도 자동 해제
+      new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1 && node.matches(combinedSelector)) {
               node.classList.add("filter_removed");
-              callback();
-              observer.disconnect();
             }
-          }
+          });
         });
-      });
-    });
+      }).observe(document.body, { childList: true, subtree: true });
+    },
+    { signal: controller.signal },
+  );
 
-    const targetNode = document.querySelector(containerSelector);
-    if (targetNode) {
-      observer.observe(targetNode, {
-        childList: true,
-        subtree: true,
-      });
-    }
-  }
-
-  /**
-   * 필터 기능을 초기화합니다.
-   * @returns {void}
-   */
-  function initializeFilter() {
-    observeElement(() => {
-      log(observeElement, "success");
-      addFilterListeners();
-    });
-
-    log(initializeFilter, "success");
-  }
-
-  initializeFilter();
+  log(initFilter, "success", "listener registered");
 }
