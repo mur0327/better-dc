@@ -21,26 +21,13 @@ export async function initFilter(log, config, userSettings) {
   document.addEventListener(
     "contextmenu",
     (event) => {
-      // 1. 정상적인 경우: 요소가 DOM에 붙어있어 부모 탐색 가능
-      const isConnectedMatch = event.target.closest(combinedSelector);
-
-      // 2. 예외 처리: 우클릭 직전 요소가 교체되어(video -> img) detached 상태인 경우
-      // 부모 탐색(closest)은 실패하므로, 요소 자체의 셀렉터 매칭만 확인하여 처리 허용
-      const isDetachedMatch = event.target.matches?.(imageSelector) || event.target.matches?.(videoSelector);
-
-      if (!isConnectedMatch && !isDetachedMatch) return;
+      const target = event.target.closest(combinedSelector);
+      if (!target) return;
 
       event.preventDefault();
       event.stopPropagation();
 
-      document.querySelectorAll(combinedSelector).forEach((el) => {
-        el.classList.add("filter_removed");
-      });
-
-      controller.abort(); // 리스너 제거
-      log(initFilter, "success", "filter removed by contextmenu");
-
-      // 이후 추가되는 이미지/비디오도 자동 해제
+      // MutationObserver 먼저 등록 (video → img 교체 즉시 캐치)
       new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           mutation.addedNodes.forEach((node) => {
@@ -50,6 +37,13 @@ export async function initFilter(log, config, userSettings) {
           });
         });
       }).observe(document.body, { childList: true, subtree: true });
+
+      document.querySelectorAll(combinedSelector).forEach((el) => {
+        el.classList.add("filter_removed");
+      });
+
+      controller.abort(); // 리스너 제거
+      log(initFilter, "success", "filter removed by contextmenu");
     },
     { signal: controller.signal },
   );
