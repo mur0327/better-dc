@@ -186,6 +186,11 @@ export async function initNavigation(log, config, userSettings) {
     const currentPagePosts = await fetchPostNumbers(currentPage);
     const currentIndex = currentPagePosts.indexOf(currentPostNo);
 
+    if (currentIndex === -1) {
+      log(addNavButtons, "warn", `current post not found in list. postNo=${currentPostNo}, page=${currentPage}`);
+      return;
+    }
+
     const prevPostNo = currentIndex < currentPagePosts.length - 1 ? currentPagePosts[currentIndex + 1] : null;
     const nextPostNo = currentIndex > 0 ? currentPagePosts[currentIndex - 1] : null;
 
@@ -198,10 +203,14 @@ export async function initNavigation(log, config, userSettings) {
       createNavButton("prev", prevPostNo, currentPage);
     }
 
-    if (nextPostNo === null && currentPage > 1) {
-      const prevPagePosts = await fetchPostNumbers(currentPage - 1);
-      if (prevPagePosts.length > 0) {
-        createNavButton("next", prevPagePosts[prevPagePosts.length - 1], currentPage - 1);
+    if (nextPostNo === null) {
+      if (currentPage > 1) {
+        const prevPagePosts = await fetchPostNumbers(currentPage - 1);
+        if (prevPagePosts.length > 0) {
+          createNavButton("next", prevPagePosts[prevPagePosts.length - 1], currentPage - 1);
+        }
+      } else {
+        log(addNavButtons, "info", "next post not found on first page");
       }
     } else {
       createNavButton("next", nextPostNo, currentPage);
