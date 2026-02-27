@@ -26,7 +26,11 @@ export const CONFIG = {
   // 네비게이션 설정
   navigation: {
     postListSelector: '.ub-content.us-post[data-type^="icon_recom"]',
+    // LEGACY(2026-02): 본문 하단/댓글 하단 삽입 방식에서 사용하던 선택자입니다.
+    // 고정 네비게이션 컨테이너 방식으로 전환되어 현재는 참조하지 않습니다.
     buttonContainerSelectors: [".view_bottom_btnbox > .fl", ".list_bottom_btnbox > .fl"],
+    cachePrefix: "betterdc_nav_posts",
+    fetchCooldownMs: 1500,
   },
 
   // 댓글 영역 설정

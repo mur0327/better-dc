@@ -22,6 +22,11 @@
       "css": ["styles/style.css"],
       "js": ["scripts/main.js"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["https://gall.dcinside.com/mgallery/board/lists/*", "https://gall.dcinside.com/board/lists/*"],
+      "js": ["scripts/nav-cache-warmup.js"],
+      "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
