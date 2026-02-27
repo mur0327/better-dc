@@ -26,7 +26,9 @@ export async function initComment(log, config, userSettings) {
     const frDiv = commentCountDiv ? commentCountDiv.querySelector(refreshSelector) : null;
 
     if (commentCountDiv && numBoxDiv && frDiv) {
-      commentCountDiv.style.height = containerHeight;
+      // 고정 height로 인한 클릭 영역 겹침을 피하기 위해 auto + minHeight를 사용
+      commentCountDiv.style.height = "auto";
+      commentCountDiv.style.minHeight = containerHeight;
 
       numBoxDiv.before(frDiv);
 
