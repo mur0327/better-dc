@@ -45,7 +45,7 @@ export async function initFilter(log, config, userSettings) {
       controller.abort(); // 리스너 제거
       log(initFilter, "success", "filter removed by contextmenu");
     },
-    { signal: controller.signal },
+    { capture: true, signal: controller.signal },
   );
 
   log(initFilter, "success", "listener registered");
